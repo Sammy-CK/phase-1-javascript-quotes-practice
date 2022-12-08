@@ -8,34 +8,34 @@ const newAuthor = document.querySelector('#author') // new author text input
 
 
 //adding new quote
-form.addEventListener('submit', () => {
-// add it to json server
-    fetch('http://localhost:3000/quotes',{
-    method : "POST",
-    headers : {
-        "Content-Type" : "application/json",
-        Accept : "application/json"
-    },
-    body : JSON.stringify({
-        quote : newQuote.value,
-        author : newAuthor.value
-    })
-
-    })
-//end
+form.addEventListener('submit',addQuote)
 
 
 
+//adds quote
+function addQuote(){
+    // add it to json server
+        fetch('http://localhost:3000/quotes',{
+        method : "POST",
+        headers : {
+            "Content-Type" : "application/json",
+            Accept : "application/json"
+        },
+        body : JSON.stringify({
+            quote : newQuote.value,
+            author : newAuthor.value
+        })
+    
+        })
+    
+     //add the new quote on screen 
+        ulForQuote.innerHTML = ''
+    
+    //display all quotes including the added ones
+        showAllQuotes();   
+    }
+//end of addQuote function
 
- //add the new quote on screen 
-    ulForQuote.innerHTML = ''
-
-//display all quotes including the added ones
-    showAllQuotes();
-
-
-})
-//end
 
 
 
@@ -46,8 +46,6 @@ fetch('http://localhost:3000/quotes?_embed=likes')
 .then(data => {console.log(data)
 // Individual quote data
     data.forEach(overallQuote => {
-
-    
  
 //actual quote data to be on screen
     const li = document.createElement('li')
@@ -77,9 +75,15 @@ fetch('http://localhost:3000/quotes?_embed=likes')
     buttonLike.classList.add('btn-success')
     buttonLike.innerText=`Likes:`
 
-//button creates like for this particular quote in the API and update the number of likes displayed    
+// deleting quote 
+ buttonLike.addEventListener('click', deleteQuote)
 
- buttonLike.addEventListener('click', () => {
+
+
+
+
+//deletes Quote
+ function deleteQuote() {
     fetch('http://localhost:3000/likes',{
         method : "POST",
         headers : {
@@ -99,16 +103,12 @@ fetch('http://localhost:3000/quotes?_embed=likes')
 
 
     })
- })
+ }
+//end of deleteQuote function
 
 
-//end
 
     blockquote.appendChild(buttonLike)
-
-
-
-
 
     const likeNoSpan = document.createElement('span')
 
@@ -135,17 +135,13 @@ buttonDelete.addEventListener('click',() => {
      showAllQuotes();
  
 })
-
-
 //end
 
     blockquote.appendChild(buttonDelete)
-
 
 })
 })
 }
 
-
-
-showAllQuotes();
+//wait for page to load
+document.addEventListener('DOMContentLoaded',showAllQuotes)
